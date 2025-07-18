@@ -47,17 +47,8 @@ tmux new -s claude-co \
 \; send-keys -t 1 'claude --dangerously-skip-permissions' Enter \
 \; send-keys -t 2 'claude --dangerously-skip-permissions' Enter \
 \; send-keys -t 3 'claude --dangerously-skip-permissions' Enter
-これでペインに名前を付けられる？？
 
-tmux new -s claude-co \
-\; split-window -h \
-\; split-window -v \
-\; select-pane -t 0 \
-\; split-window -v \
-\; send-keys -t 0 'claude --dangerously-skip-permissions' Enter \
-\; send-keys -t 1 'claude --dangerously-skip-permissions' Enter \
-\; send-keys -t 2 'claude --dangerously-skip-permissions' Enter \
-\; send-keys -t 3 'claude --dangerously-skip-permissions' Enter
+
 
 vim ~/.tmux.conf
 で下記を設定
