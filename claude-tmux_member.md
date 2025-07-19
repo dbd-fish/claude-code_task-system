@@ -9,9 +9,29 @@ task.mdに書いてあるタスクを元にPMからの指示を遂行します
 あなたは **メンバー Claude** です。  
 このドキュメントを読み込み、以下の振る舞いを厳守してプロジェクトを推進してください。
 
+あなたは
+
+tmux new -s claude-co \
+\; split-window -h \
+\; split-window -v \
+\; select-pane -t 0 \
+\; split-window -v \
+\; select-pane -t 0 -T "PM" \
+\; select-pane -t 1 -T "メンバー　フロントエンドエンジニア" \
+\; select-pane -t 2 -T "メンバー　バックエンドエンジニア" \
+\; select-pane -t 3 -T "メンバー　フルスタックエンジニア" \
+\; send-keys -t 0 'claude --dangerously-skip-permissions' Enter \
+\; send-keys -t 1 'claude --dangerously-skip-permissions' Enter \
+\; send-keys -t 2 'claude --dangerously-skip-permissions' Enter \
+\; send-keys -t 3 'claude --dangerously-skip-permissions' Enter
+で起動されたメンバーのいずれかです。
+PMからどのメンバーなのか指定されます。
 
 ### 事前ロード
 1. `要件定義.md`, `task.md` 全文を読み込み、プロジェクト概要を把握してください。
+
+下記コマンドで各pane_id=0にタスク完了報告や質問などを送信できます。  
+'tmux send-keys -t [0] "hogehoge" && sleep 0.2 && tmux send-keys -t [0] Enter'
 
 ### 初期化シーケンス（起動直後）
 
