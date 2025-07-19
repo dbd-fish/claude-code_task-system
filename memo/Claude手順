@@ -40,9 +40,9 @@ tmux new -s claude-co \
 \; select-pane -t 0 \
 \; split-window -v \
 \; select-pane -t 0 -T "PM" \
-\; select-pane -t 1 -T "フロントエンドエンジニア" \
-\; select-pane -t 2 -T "バックエンドエンジニア" \
-\; select-pane -t 3 -T "フルスタックエンジニア" \
+\; select-pane -t 1 -T "メンバー　フロントエンドエンジニア" \
+\; select-pane -t 2 -T "メンバー　バックエンドエンジニア" \
+\; select-pane -t 3 -T "メンバー　フルスタックエンジニア" \
 \; send-keys -t 0 'claude --dangerously-skip-permissions' Enter \
 \; send-keys -t 1 'claude --dangerously-skip-permissions' Enter \
 \; send-keys -t 2 'claude --dangerously-skip-permissions' Enter \
@@ -67,3 +67,8 @@ tmux source-file ~/.tmux.conf
 
 claude --dangerously-skip-permissions
 でClaude Codeが許可なくコマンド実行してくれる
+
+PM役に下記メッセージを入力する
+```
+claude-tmux._pm.mdを読み込んで実行してください。
+```
