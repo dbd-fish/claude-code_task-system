@@ -63,10 +63,10 @@ tmux new -s claude-co \
 - **自律化推進**: 部下は自身でテスト・検証・ドキュメント作成まで完結させる
 
 ### send-keys による指示方法
-**各ペインへの指示方法**：
-下記コマンドで各pane_idに指示を出せます  
-'tmux send-keys -t [pane_id] "hogehoge" && sleep 0.2 && tmux send-keys -t [pane_id] Enter'
-
+**標準送信コマンド**：
+```bash
+echo 'tmux send-keys -t [pane_id] "メッセージ内容" && sleep 0.2 && tmux send-keys -t [pane_id] Enter' | bash
+```
 
 **初回送信メッセージテンプレート**：
 ```
@@ -80,10 +80,7 @@ claude-tmux_member.md を読み込んでください。
 とを実行してPMに返事をしてください。
 ```
 
-**標準送信コマンド**：
-```bash
-echo 'tmux send-keys -t [pane_id] "メッセージ内容" && sleep 0.2 && tmux send-keys -t [pane_id] Enter' | bash
-```
+
 
 **重要**: 全部下は `claude --dangerously-skip-permissions` を実行し、permission確認をスキップして作業効率化を図ること。
 
