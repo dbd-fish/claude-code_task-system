@@ -64,11 +64,13 @@ tmux new -s claude-co \
 
 ### send-keys による指示方法
 **標準送信コマンド**：
+各メンバーにメッセージを送信するときは下記の形式に則ってください。
 ```bash
 echo 'tmux send-keys -t [pane_id] "メッセージ内容" && sleep 0.2 && tmux send-keys -t [pane_id] Enter' | bash
 ```
 
 **初回送信メッセージテンプレート**：
+初回のメッセージ内容のテンプレートは下記の通りです。
 ```
 あなたは
 ROLE: フロントエンドエンジニア
