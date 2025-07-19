@@ -70,5 +70,5 @@ claude --dangerously-skip-permissions
 
 PM役に下記メッセージを入力する
 ```
-claude-tmux._pm.mdを読み込んで実行してください。
+claude-tmux_pm.mdを読み込んでシステム開発に着手してください。
 ```
