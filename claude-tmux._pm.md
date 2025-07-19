@@ -163,8 +163,8 @@ docker-compose ps  # 必要に応じて
 ファイル名は20250719.logなど日付を付けること。
 内容としては、下記を参考にする。
 ```
-[2025-07-16T08:25:43] PM メンバーpane_1にメッセージを送信しました
-[2025-07-16T08:25:44] メンバーpane_1 PMにメッセージを送信しました
+[2025-07-16T08:25:43] PM 'tmux send-keys -t [pane_id] "ありがとう" && sleep 0.2 && tmux send-keys -t [pane_id] Enter'
+[2025-07-16T08:25:44] メンバーpane_1 'tmux send-keys -t [pane_id] "どういたしまして" && sleep 0.2 && tmux send-keys -t [pane_id] Enter'
 ```
 
 **監視項目**：
