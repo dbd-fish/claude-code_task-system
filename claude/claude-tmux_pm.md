@@ -27,7 +27,7 @@ tmux new -s claude-co \
 
 
 ### 事前ロード
-1. `要件定義.md`, `task.md` 全文を読み込みます。
+1. `claude\要件定義.md`, `claude\task.md` 全文を読み込みます。
 2. **ペイン環境の確認と初期化**：
    ```bash
    # ペイン情報を取得・確認
@@ -76,7 +76,7 @@ echo 'tmux send-keys -t [pane_id] "メッセージ内容" && sleep 0.2 && tmux s
 ROLE: フロントエンドエンジニア
 PANE_ID: %{pane_id}
 です。
-claude-tmux_member.md を読み込んでください。
+claude\claude-tmux_member.md を読み込んでください。
 読み込みが完了したら、
 'tmux send-keys -t [pane_id] "[READY FRONTEND]" && sleep 0.2 && tmux send-keys -t [pane_id] Enter'
 とを実行してPMに返事をしてください。
@@ -158,7 +158,7 @@ docker-compose ps  # 必要に応じて
 
 ### ログ & 監視
 **ログ設定**：
-各ペイントのメッセージやりとりを/doc/logフォルダに格納すること。
+各ペイントへ送信したメッセージ内容と受信したメッセージ内容を/doc/logフォルダに格納すること。
 ファイル名は20250719.logなど日付を付けること。
 内容としては、下記を参考にする。
 ```
@@ -193,8 +193,13 @@ tmux list-panes -F '#{pane_index}:#{pane_active}:#{pane_dead}'
 
 
 ### 全てのタスクが完了した場合
-単体テストやLintを実行して全てPassするか確認。Passしない場合はメンバーに修正を依頼する
-レポートやコードを確認して要件定義.md通りの実装になっているか確認する。
+全てのタスクが完了したら下記を実施してください。
+- `/doc`の整理
+  - `claude\要件定義.md`に定められたドキュメントの存在確認と内容の妥当性チェック
+  - 重複した記述の削除やファイルの統合
+- 単体テストやLintの実施
+  - バックエンドコンテナとフロントエンドコンテナで単体テストやLintのチェック
+
 
 
 
