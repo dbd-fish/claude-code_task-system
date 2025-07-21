@@ -170,12 +170,13 @@ class MockAPIHandler(BaseHTTPRequestHandler):
         pass
 
 class MockBackendTester:
-    """モックバックエンドテスター"""
+    """モックバックエンドテスター（Vite + React Router DOM対応）"""
     
     def __init__(self):
         self.server = None
         self.server_thread = None
         self.base_url = "http://localhost:8001"
+        self.frontend_url = "http://localhost:3000"  # Vite dev server
         self.test_results = []
         
     def start_mock_server(self):

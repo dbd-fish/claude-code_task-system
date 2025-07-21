@@ -1,15 +1,5 @@
-import '@testing-library/jest-dom';
-
 // モックのグローバル設定
 global.fetch = jest.fn();
-
-// React Router のモック
-jest.mock('react-router', () => ({
-  ...jest.requireActual('react-router'),
-  useNavigate: () => jest.fn(),
-  useParams: () => ({ id: '1' }),
-  Link: ({ children, to, ...props }) => <a href={to} {...props}>{children}</a>
-}));
 
 // アラートのモック
 global.alert = jest.fn();
@@ -21,7 +11,8 @@ beforeAll(() => {
   console.error = (...args) => {
     if (
       typeof args[0] === 'string' &&
-      args[0].includes('Warning: ReactDOM.render is deprecated')
+      (args[0].includes('Warning: ReactDOM.render is deprecated') ||
+       args[0].includes('Warning: React.createElement'))
     ) {
       return;
     }

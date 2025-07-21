@@ -9,11 +9,11 @@ export interface Task {
   id: number;
   title: string;
   description: string;
-  dueDate: string;
+  deadline: string;
   assignee: string;
   status: 'pending' | 'in_progress' | 'completed';
-  createdAt?: string;
-  updatedAt?: string;
+  created_at?: string;
+  updated_at?: string;
 }
 
 /**
@@ -22,7 +22,7 @@ export interface Task {
 export interface CreateTaskData {
   title: string;
   description: string;
-  dueDate: string;
+  deadline: string;
   assignee: string;
 }
 
@@ -104,7 +104,7 @@ async function apiRequest<T>(
  * タスク一覧を取得
  */
 export async function getTasks(): Promise<Task[]> {
-  const response = await apiRequest<ApiResponse<Task[]>>('/api/tasks');
+  const response = await apiRequest<ApiResponse<Task[]>>('/api/v1/tasks');
   return response.data;
 }
 
@@ -112,7 +112,7 @@ export async function getTasks(): Promise<Task[]> {
  * 特定のタスクを取得
  */
 export async function getTask(id: number): Promise<Task> {
-  const response = await apiRequest<ApiResponse<Task>>(`/api/tasks/${id}`);
+  const response = await apiRequest<ApiResponse<Task>>(`/api/v1/tasks/${id}`);
   return response.data;
 }
 
@@ -120,7 +120,7 @@ export async function getTask(id: number): Promise<Task> {
  * 新しいタスクを作成
  */
 export async function createTask(taskData: CreateTaskData): Promise<Task> {
-  const response = await apiRequest<ApiResponse<Task>>('/api/tasks', {
+  const response = await apiRequest<ApiResponse<Task>>('/api/v1/tasks', {
     method: 'POST',
     body: JSON.stringify(taskData),
   });
@@ -131,7 +131,7 @@ export async function createTask(taskData: CreateTaskData): Promise<Task> {
  * タスクを更新
  */
 export async function updateTask(id: number, taskData: UpdateTaskData): Promise<Task> {
-  const response = await apiRequest<ApiResponse<Task>>(`/api/tasks/${id}`, {
+  const response = await apiRequest<ApiResponse<Task>>(`/api/v1/tasks/${id}`, {
     method: 'PUT',
     body: JSON.stringify(taskData),
   });
@@ -142,7 +142,7 @@ export async function updateTask(id: number, taskData: UpdateTaskData): Promise<
  * タスクを削除
  */
 export async function deleteTask(id: number): Promise<void> {
-  await apiRequest<ApiResponse<null>>(`/api/tasks/${id}`, {
+  await apiRequest<ApiResponse<null>>(`/api/v1/tasks/${id}`, {
     method: 'DELETE',
   });
 }
@@ -152,7 +152,7 @@ export async function deleteTask(id: number): Promise<void> {
  */
 export async function checkApiConnection(): Promise<boolean> {
   try {
-    await apiRequest<any>('/api/health');
+    await apiRequest<any>('/api/v1/health');
     return true;
   } catch (error) {
     console.error('API接続エラー:', error);

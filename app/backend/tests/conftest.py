@@ -128,7 +128,7 @@ def created_task(client, sample_task_data):
     Returns:
         dict: 作成されたタスクのレスポンスデータ
     """
-    response = client.post("/api/v1/tasks", json=sample_task_data)
+    response = client.post("/tasks", json=sample_task_data)
     assert response.status_code == 201
     return response.json()
 
@@ -172,7 +172,7 @@ def multiple_tasks(client):
     ]
     
     for task_data in task_data_list:
-        response = client.post("/api/v1/tasks", json=task_data)
+        response = client.post("/tasks", json=task_data)
         assert response.status_code == 201
         tasks.append(response.json())
     

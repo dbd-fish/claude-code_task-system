@@ -14,7 +14,7 @@ class TestTaskCreation:
     
     def test_create_task_success(self, client, sample_task_data):
         """タスク作成の正常系テスト"""
-        response = client.post("/api/v1/tasks", json=sample_task_data)
+        response = client.post("/tasks", json=sample_task_data)
         
         assert response.status_code == 201
         data = response.json()
@@ -38,7 +38,7 @@ class TestTaskCreation:
     def test_create_task_minimal_data(self, client):
         """最小限のデータでのタスク作成テスト"""
         minimal_data = {"title": "最小限タスク"}
-        response = client.post("/api/v1/tasks", json=minimal_data)
+        response = client.post("/tasks", json=minimal_data)
         
         assert response.status_code == 201
         data = response.json()
@@ -53,14 +53,14 @@ class TestTaskCreation:
     def test_create_task_missing_title(self, client):
         """タイトルなしでのタスク作成エラーテスト"""
         invalid_data = {"description": "タイトルがありません"}
-        response = client.post("/api/v1/tasks", json=invalid_data)
+        response = client.post("/tasks", json=invalid_data)
         
         assert response.status_code == 422
     
     def test_create_task_empty_title(self, client):
         """空のタイトルでのタスク作成エラーテスト"""
         invalid_data = {"title": ""}
-        response = client.post("/api/v1/tasks", json=invalid_data)
+        response = client.post("/tasks", json=invalid_data)
         
         assert response.status_code == 422
     
@@ -70,7 +70,7 @@ class TestTaskCreation:
             "title": "テストタスク",
             "status": "invalid_status"
         }
-        response = client.post("/api/v1/tasks", json=invalid_data)
+        response = client.post("/tasks", json=invalid_data)
         
         assert response.status_code == 422
     
@@ -81,7 +81,7 @@ class TestTaskCreation:
             "title": "テストタスク",
             "deadline": yesterday
         }
-        response = client.post("/api/v1/tasks", json=invalid_data)
+        response = client.post("/tasks", json=invalid_data)
         
         assert response.status_code == 422
 
@@ -92,7 +92,7 @@ class TestTaskRetrieval:
     def test_get_task_by_id_success(self, client, created_task):
         """IDによるタスク取得の正常系テスト"""
         task_id = created_task["task"]["id"]
-        response = client.get(f"/api/v1/tasks/{task_id}")
+        response = client.get(f"/tasks/{task_id}")
         
         assert response.status_code == 200
         task = response.json()
@@ -103,7 +103,7 @@ class TestTaskRetrieval:
     
     def test_get_task_not_found(self, client):
         """存在しないタスクの取得エラーテスト"""
-        response = client.get("/api/v1/tasks/99999")
+        response = client.get("/tasks/99999")
         
         assert response.status_code == 404
         error = response.json()
@@ -112,7 +112,7 @@ class TestTaskRetrieval:
     
     def test_get_tasks_list_empty(self, client):
         """空のタスク一覧取得テスト"""
-        response = client.get("/api/v1/tasks")
+        response = client.get("/tasks")
         
         assert response.status_code == 200
         data = response.json()
@@ -133,7 +133,7 @@ class TestTaskRetrieval:
     
     def test_get_tasks_list_with_data(self, client, multiple_tasks):
         """データありのタスク一覧取得テスト"""
-        response = client.get("/api/v1/tasks")
+        response = client.get("/tasks")
         
         assert response.status_code == 200
         data = response.json()
@@ -147,7 +147,7 @@ class TestTaskRetrieval:
     
     def test_get_tasks_with_status_filter(self, client, multiple_tasks):
         """ステータスフィルターでのタスク一覧取得テスト"""
-        response = client.get("/api/v1/tasks?status=pending")
+        response = client.get("/tasks?status=pending")
         
         assert response.status_code == 200
         data = response.json()
@@ -157,7 +157,7 @@ class TestTaskRetrieval:
     
     def test_get_tasks_with_assignee_filter(self, client, multiple_tasks):
         """担当者フィルターでのタスク一覧取得テスト"""
-        response = client.get("/api/v1/tasks?assignee=ユーザー1")
+        response = client.get("/tasks?assignee=ユーザー1")
         
         assert response.status_code == 200
         data = response.json()
@@ -168,7 +168,7 @@ class TestTaskRetrieval:
     
     def test_get_tasks_with_pagination(self, client, multiple_tasks):
         """ページネーションでのタスク一覧取得テスト"""
-        response = client.get("/api/v1/tasks?page=1&size=2")
+        response = client.get("/tasks?page=1&size=2")
         
         assert response.status_code == 200
         data = response.json()
@@ -183,7 +183,7 @@ class TestTaskRetrieval:
     
     def test_get_tasks_invalid_status_filter(self, client):
         """無効なステータスフィルターでのエラーテスト"""
-        response = client.get("/api/v1/tasks?status=invalid")
+        response = client.get("/tasks?status=invalid")
         
         assert response.status_code == 400
 
@@ -199,7 +199,7 @@ class TestTaskUpdate:
             "status": "in_progress"
         }
         
-        response = client.put(f"/api/v1/tasks/{task_id}", json=update_data)
+        response = client.put(f"/tasks/{task_id}", json=update_data)
         
         assert response.status_code == 200
         task = response.json()
@@ -215,7 +215,7 @@ class TestTaskUpdate:
         task_id = created_task["task"]["id"]
         update_data = {"status": "completed"}
         
-        response = client.put(f"/api/v1/tasks/{task_id}", json=update_data)
+        response = client.put(f"/tasks/{task_id}", json=update_data)
         
         assert response.status_code == 200
         task = response.json()
@@ -227,14 +227,14 @@ class TestTaskUpdate:
     def test_update_task_not_found(self, client):
         """存在しないタスクの更新エラーテスト"""
         update_data = {"title": "更新"}
-        response = client.put("/api/v1/tasks/99999", json=update_data)
+        response = client.put("/tasks/99999", json=update_data)
         
         assert response.status_code == 404
     
     def test_update_task_empty_data(self, client, created_task):
         """空のデータでの更新エラーテスト"""
         task_id = created_task["task"]["id"]
-        response = client.put(f"/api/v1/tasks/{task_id}", json={})
+        response = client.put(f"/tasks/{task_id}", json={})
         
         assert response.status_code == 400
     
@@ -243,7 +243,7 @@ class TestTaskUpdate:
         task_id = created_task["task"]["id"]
         invalid_data = {"status": "invalid_status"}
         
-        response = client.put(f"/api/v1/tasks/{task_id}", json=invalid_data)
+        response = client.put(f"/tasks/{task_id}", json=invalid_data)
         
         assert response.status_code == 422
 
@@ -254,7 +254,7 @@ class TestTaskDeletion:
     def test_delete_confirmation_success(self, client, created_task):
         """削除確認の正常系テスト"""
         task_id = created_task["task"]["id"]
-        response = client.get(f"/api/v1/tasks/{task_id}/delete-confirmation")
+        response = client.get(f"/tasks/{task_id}/delete-confirmation")
         
         assert response.status_code == 200
         data = response.json()
@@ -266,14 +266,14 @@ class TestTaskDeletion:
     
     def test_delete_confirmation_not_found(self, client):
         """存在しないタスクの削除確認エラーテスト"""
-        response = client.get("/api/v1/tasks/99999/delete-confirmation")
+        response = client.get("/tasks/99999/delete-confirmation")
         
         assert response.status_code == 404
     
     def test_delete_task_success(self, client, created_task):
         """タスク削除の正常系テスト"""
         task_id = created_task["task"]["id"]
-        response = client.delete(f"/api/v1/tasks/{task_id}")
+        response = client.delete(f"/tasks/{task_id}")
         
         assert response.status_code == 200
         data = response.json()
@@ -284,12 +284,12 @@ class TestTaskDeletion:
         assert data["deleted_task"]["id"] == task_id
         
         # 削除後の確認
-        get_response = client.get(f"/api/v1/tasks/{task_id}")
+        get_response = client.get(f"/tasks/{task_id}")
         assert get_response.status_code == 404
     
     def test_delete_task_not_found(self, client):
         """存在しないタスクの削除エラーテスト"""
-        response = client.delete("/api/v1/tasks/99999")
+        response = client.delete("/tasks/99999")
         
         assert response.status_code == 404
 
@@ -308,29 +308,29 @@ class TestAPIIntegration:
             "status": "pending"
         }
         
-        create_response = client.post("/api/v1/tasks", json=create_data)
+        create_response = client.post("/tasks", json=create_data)
         assert create_response.status_code == 201
         task = create_response.json()["task"]
         task_id = task["id"]
         
         # 2. タスク取得
-        get_response = client.get(f"/api/v1/tasks/{task_id}")
+        get_response = client.get(f"/tasks/{task_id}")
         assert get_response.status_code == 200
         retrieved_task = get_response.json()
         assert retrieved_task["title"] == create_data["title"]
         
         # 3. タスク更新
         update_data = {"status": "in_progress", "description": "更新された説明"}
-        update_response = client.put(f"/api/v1/tasks/{task_id}", json=update_data)
+        update_response = client.put(f"/tasks/{task_id}", json=update_data)
         assert update_response.status_code == 200
         updated_task = update_response.json()
         assert updated_task["status"] == "in_progress"
         assert updated_task["description"] == "更新された説明"
         
         # 4. タスク削除
-        delete_response = client.delete(f"/api/v1/tasks/{task_id}")
+        delete_response = client.delete(f"/tasks/{task_id}")
         assert delete_response.status_code == 200
         
         # 5. 削除確認
-        final_get_response = client.get(f"/api/v1/tasks/{task_id}")
+        final_get_response = client.get(f"/tasks/{task_id}")
         assert final_get_response.status_code == 404

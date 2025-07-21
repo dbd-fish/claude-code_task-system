@@ -122,6 +122,10 @@ async def get_task_direct(task_id: int, db: Session = Depends(get_db)):
 async def update_task_direct(task_id: int, task_update: tasks.TaskUpdate, db: Session = Depends(get_db)):
     return await tasks.update_task_endpoint(task_id, task_update, db)
 
+@tasks_direct_router.get("/tasks/{task_id}/delete-confirmation")
+async def get_task_delete_confirmation_direct(task_id: int, db: Session = Depends(get_db)):
+    return await tasks.get_task_delete_confirmation(task_id, db)
+
 @tasks_direct_router.delete("/tasks/{task_id}")
 async def delete_task_direct(task_id: int, db: Session = Depends(get_db)):
     return await tasks.delete_task_endpoint(task_id, db)
