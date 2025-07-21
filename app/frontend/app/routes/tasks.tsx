@@ -23,7 +23,7 @@ export async function loader(): Promise<{ tasks: Task[] }> {
           id: 1,
           title: "React Routerの学習",
           description: "React Router V7の基本機能を理解する",
-          dueDate: "2025-07-25",
+          deadline: "2025-07-25",
           assignee: "田中太郎",
           status: "in_progress" as const
         },
@@ -31,7 +31,7 @@ export async function loader(): Promise<{ tasks: Task[] }> {
           id: 2,
           title: "API設計",
           description: "タスク管理用のAPI仕様を設計する",
-          dueDate: "2025-07-23",
+          deadline: "2025-07-23",
           assignee: "佐藤花子",
           status: "pending" as const
         }
@@ -45,7 +45,7 @@ export default function Tasks() {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [assigneeFilter, setAssigneeFilter] = useState<string>("all");
-  const [sortBy, setSortBy] = useState<string>("dueDate");
+  const [sortBy, setSortBy] = useState<string>("deadline");
 
   // フィルタリングとソートされたタスクリスト
   const filteredAndSortedTasks = useMemo(() => {
@@ -64,8 +64,8 @@ export default function Tasks() {
       switch (sortBy) {
         case "title":
           return a.title.localeCompare(b.title, 'ja');
-        case "dueDate":
-          return new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime();
+        case "deadline":
+          return new Date(a.deadline).getTime() - new Date(b.deadline).getTime();
         case "status":
           const statusOrder = { pending: 0, in_progress: 1, completed: 2 };
           return statusOrder[a.status] - statusOrder[b.status];
@@ -87,27 +87,54 @@ export default function Tasks() {
   return (
     <PageLayout>
       <div style={{ padding: "2rem" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "2rem" }}>
-        <h1>タスク一覧 ({filteredAndSortedTasks.length}件)</h1>
-        <div>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "2rem", flexWrap: "wrap", gap: "1rem" }}>
+        <h1 style={{ margin: 0, color: "#343a40" }}>タスク一覧 ({filteredAndSortedTasks.length}件)</h1>
+        <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
           <Link to="/tasks/new" viewTransition style={{ 
-            padding: "0.5rem 1rem",
+            padding: "0.75rem 1.5rem",
             backgroundColor: "#28a745",
             color: "white",
             textDecoration: "none",
-            borderRadius: "4px",
-            marginRight: "1rem"
+            borderRadius: "6px",
+            fontWeight: "500",
+            boxShadow: "0 2px 4px rgba(40, 167, 69, 0.2)",
+            transition: "all 0.2s ease",
+            cursor: "pointer"
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = "#218838";
+            e.currentTarget.style.transform = "translateY(-1px)";
+            e.currentTarget.style.boxShadow = "0 4px 8px rgba(40, 167, 69, 0.3)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = "#28a745";
+            e.currentTarget.style.transform = "translateY(0)";
+            e.currentTarget.style.boxShadow = "0 2px 4px rgba(40, 167, 69, 0.2)";
           }}>
-            新規作成
+            ➕ 新規作成
           </Link>
           <Link to="/" viewTransition style={{ 
-            padding: "0.5rem 1rem",
+            padding: "0.75rem 1.5rem",
             backgroundColor: "#6c757d",
             color: "white",
             textDecoration: "none",
-            borderRadius: "4px"
+            borderRadius: "6px",
+            fontWeight: "500",
+            boxShadow: "0 2px 4px rgba(108, 117, 125, 0.2)",
+            transition: "all 0.2s ease",
+            cursor: "pointer"
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = "#5a6268";
+            e.currentTarget.style.transform = "translateY(-1px)";
+            e.currentTarget.style.boxShadow = "0 4px 8px rgba(108, 117, 125, 0.3)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = "#6c757d";
+            e.currentTarget.style.transform = "translateY(0)";
+            e.currentTarget.style.boxShadow = "0 2px 4px rgba(108, 117, 125, 0.2)";
           }}>
-            ホームに戻る
+            🏠 ホームに戻る
           </Link>
         </div>
       </div>
@@ -139,6 +166,7 @@ export default function Tasks() {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="タイトル、説明、担当者で検索"
+              aria-label="タスクを検索"
               style={{
                 width: "100%",
                 padding: "0.5rem",
@@ -158,6 +186,7 @@ export default function Tasks() {
               id="statusFilter"
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
+              aria-label="ステータスでフィルタ"
               style={{
                 width: "100%",
                 padding: "0.5rem",
@@ -182,6 +211,7 @@ export default function Tasks() {
               id="assigneeFilter"
               value={assigneeFilter}
               onChange={(e) => setAssigneeFilter(e.target.value)}
+              aria-label="担当者でフィルタ"
               style={{
                 width: "100%",
                 padding: "0.5rem",
@@ -206,6 +236,7 @@ export default function Tasks() {
               id="sortBy"
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
+              aria-label="並び順を選択"
               style={{
                 width: "100%",
                 padding: "0.5rem",
@@ -214,7 +245,7 @@ export default function Tasks() {
                 fontSize: "0.9rem"
               }}
             >
-              <option value="dueDate">期限順</option>
+              <option value="deadline">期限順</option>
               <option value="title">タイトル順</option>
               <option value="status">ステータス順</option>
               <option value="assignee">担当者順</option>
@@ -228,19 +259,33 @@ export default function Tasks() {
             setSearchTerm("");
             setStatusFilter("all");
             setAssigneeFilter("all");
-            setSortBy("dueDate");
+            setSortBy("deadline");
           }}
+          aria-label="検索とフィルタをリセット"
           style={{
-            padding: "0.5rem 1rem",
+            padding: "0.75rem 1.5rem",
             backgroundColor: "#6c757d",
             color: "white",
             border: "none",
-            borderRadius: "4px",
+            borderRadius: "6px",
             cursor: "pointer",
-            fontSize: "0.9rem"
+            fontSize: "0.9rem",
+            fontWeight: "500",
+            boxShadow: "0 2px 4px rgba(108, 117, 125, 0.2)",
+            transition: "all 0.2s ease"
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = "#5a6268";
+            e.currentTarget.style.transform = "translateY(-1px)";
+            e.currentTarget.style.boxShadow = "0 4px 8px rgba(108, 117, 125, 0.3)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = "#6c757d";
+            e.currentTarget.style.transform = "translateY(0)";
+            e.currentTarget.style.boxShadow = "0 2px 4px rgba(108, 117, 125, 0.2)";
           }}
         >
-          フィルタをリセット
+          🔄 フィルタをリセット
         </button>
       </div>
 
@@ -258,10 +303,23 @@ export default function Tasks() {
             <div 
               key={task.id} 
               style={{ 
-                border: "1px solid #ddd",
-                borderRadius: "8px",
-                padding: "1rem",
-                backgroundColor: "#f8f9fa"
+                border: "1px solid #e9ecef",
+                borderRadius: "12px",
+                padding: "1.5rem",
+                backgroundColor: "#ffffff",
+                boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+                transition: "all 0.3s ease",
+                cursor: "pointer"
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = "translateY(-2px)";
+                e.currentTarget.style.boxShadow = "0 4px 16px rgba(0, 0, 0, 0.15)";
+                e.currentTarget.style.borderColor = "#007bff";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "translateY(0)";
+                e.currentTarget.style.boxShadow = "0 2px 8px rgba(0, 0, 0, 0.1)";
+                e.currentTarget.style.borderColor = "#e9ecef";
               }}
             >
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "0.5rem" }}>
@@ -286,8 +344,8 @@ export default function Tasks() {
               <p style={{ margin: "0.5rem 0", color: "#6c757d" }}>{task.description}</p>
               <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.9rem", color: "#6c757d" }}>
                 <span>担当者: {task.assignee}</span>
-                <span style={{ color: getDueDateColor(task.dueDate) }}>
-                  期限: {task.dueDate}
+                <span style={{ color: getDueDateColor(task.deadline) }}>
+                  期限: {task.deadline}
                 </span>
               </div>
               <div style={{ marginTop: "1rem" }}>

@@ -7,14 +7,40 @@ CORS設定、データベース接続、ルーターの設定を含みます。
 
 from fastapi import FastAPI, Depends, Query, APIRouter
 from fastapi.middleware.cors import CORSMiddleware
+from contextlib import asynccontextmanager
 from typing import Optional
 from sqlalchemy.orm import Session
-import os
 from dotenv import load_dotenv
-from app.database import create_tables, check_database_connection
+from app.database import create_tables, check_database_connection, get_db
+from app.routers import tasks
 
 # 環境変数を読み込み
 load_dotenv()
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """
+    アプリケーションのライフサイクル管理
+    
+    起動時とシャットダウン時の処理を定義します。
+    """
+    # 起動時の処理
+    from app import models  # noqa: F401
+    
+    # データベーステーブルを作成
+    await create_tables()
+    
+    # データベース接続をテスト
+    db_connected = await check_database_connection()
+    if db_connected:
+        print("✅ データベース接続成功")
+    else:
+        print("❌ データベース接続失敗")
+    
+    yield
+    
+    # シャットダウン時の処理（必要に応じて追加）
+    print("📱 アプリケーション終了")
 
 # FastAPIアプリケーションのインスタンスを作成
 app = FastAPI(
@@ -22,7 +48,8 @@ app = FastAPI(
     description="タスクの登録、更新、削除、一覧取得を行うAPI",
     version="1.0.0",
     docs_url="/docs",
-    redoc_url="/redoc"
+    redoc_url="/redoc",
+    lifespan=lifespan
 )
 
 # CORS設定
@@ -67,33 +94,11 @@ async def health_check():
         "database": "connected" if db_status else "disconnected"
     }
 
-@app.on_event("startup")
-async def startup_event():
-    """
-    アプリケーション起動時の処理
-    
-    データベーステーブルの作成とモデルの初期化を行います。
-    """
-    # モデルをインポートしてテーブル作成に反映
-    from app import models  # noqa: F401
-    
-    # データベーステーブルを作成
-    await create_tables()
-    
-    # データベース接続をテスト
-    db_connected = await check_database_connection()
-    if db_connected:
-        print("✅ データベース接続成功")
-    else:
-        print("❌ データベース接続失敗")
 
-# タスクAPI用のルーターを追加
-from app.routers import tasks
-app.include_router(tasks.router, prefix="/api/v1", tags=["tasks"])
+# 互換性のため両方のパスを提供
+app.include_router(tasks.router, prefix="/api/v1", tags=["tasks-v1"])
 
 # 直接パスでもアクセス可能にする（互換性のため）
-from app.routers import tasks as tasks_direct
-from app.database import get_db
 tasks_direct_router = APIRouter()
 
 # 直接パスのエンドポイントを追加

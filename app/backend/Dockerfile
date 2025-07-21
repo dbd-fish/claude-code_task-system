@@ -1,22 +1,41 @@
 # FastAPI バックエンド用 Dockerfile
 FROM python:3.11-slim
 
+# メタデータ設定
+LABEL maintainer="TaskManager Development Team"
+LABEL description="FastAPI Backend for Task Management Application"
+LABEL version="1.0.0"
+
 # 作業ディレクトリを設定
 WORKDIR /app
 
-# システムの依存関係をインストール
+# システムの依存関係をインストール（マルチステージ最適化）
 RUN apt-get update && apt-get install -y \
     gcc \
-    && rm -rf /var/lib/apt/lists/*
+    libpq-dev \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
+
+# 非rootユーザー作成（セキュリティ向上）
+RUN addgroup --system app && adduser --system --group app
 
 # Pythonの依存関係ファイルをコピー
 COPY requirements.txt .
 
-# Pythonの依存関係をインストール
-RUN pip install --no-cache-dir -r requirements.txt
+# Pythonの依存関係をインストール（最適化）
+RUN pip install --no-cache-dir --upgrade pip \
+    && pip install --no-cache-dir -r requirements.txt \
+    && pip cache purge
 
 # アプリケーションのソースコードをコピー
-COPY . .
+COPY --chown=app:app . .
+
+# ユーザー権限変更
+USER app
+
+# ヘルスチェック追加
+HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
+  CMD curl -f http://localhost:8000/health || exit 1
 
 # ポート8000を公開
 EXPOSE 8000

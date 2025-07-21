@@ -12,7 +12,6 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
 
 from app.database import Base, get_db
-from app.models import Task
 from main import app
 
 # テスト用のデータベースURL（SQLite使用）

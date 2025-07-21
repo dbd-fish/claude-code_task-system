@@ -63,9 +63,9 @@ export function getTodayString(): string {
 /**
  * 期限の状態を判定
  */
-export function getDueDateStatus(dueDate: string): 'overdue' | 'today' | 'soon' | 'normal' {
+export function getDueDateStatus(deadline: string): 'overdue' | 'today' | 'soon' | 'normal' {
   const today = new Date();
-  const due = new Date(dueDate);
+  const due = new Date(deadline);
   const diffTime = due.getTime() - today.getTime();
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
   
@@ -83,8 +83,8 @@ export function getDueDateStatus(dueDate: string): 'overdue' | 'today' | 'soon' 
 /**
  * 期限状態の色を取得
  */
-export function getDueDateColor(dueDate: string): string {
-  const status = getDueDateStatus(dueDate);
+export function getDueDateColor(deadline: string): string {
+  const status = getDueDateStatus(deadline);
   
   switch (status) {
     case 'overdue':

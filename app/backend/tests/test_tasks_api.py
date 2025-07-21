@@ -5,7 +5,6 @@
 全てのCRUD操作とエラーハンドリングをテストします。
 """
 
-import pytest
 from datetime import date, timedelta
 
 

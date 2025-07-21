@@ -152,7 +152,7 @@ def create_task(db: Session, task: TaskCreate) -> Task:
     Returns:
         Task: 作成されたタスクオブジェクト
     """
-    db_task = Task(**task.dict())
+    db_task = Task(**task.model_dump())
     db.add(db_task)
     db.commit()
     db.refresh(db_task)
@@ -185,7 +185,7 @@ def update_task(db: Session, task_id: int, task_update: TaskUpdate) -> Optional[
     
     try:
         # None以外の値のみ更新
-        update_data = task_update.dict(exclude_unset=True)
+        update_data = task_update.model_dump(exclude_unset=True)
         
         # 各フィールドを更新
         for field, value in update_data.items():

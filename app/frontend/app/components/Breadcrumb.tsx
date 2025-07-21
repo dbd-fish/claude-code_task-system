@@ -1,11 +1,11 @@
-import { Link, useLocation, useParams } from "react-router";
+import { Link, useLocation } from "react-router";
 
 /**
  * パンくずナビゲーションコンポーネント
  */
 export default function Breadcrumb() {
   const location = useLocation();
-  const params = useParams();
+  // const params = useParams(); // 将来の実装用（現在未使用）
 
   const getBreadcrumbs = () => {
     const pathSegments = location.pathname.split("/").filter(Boolean);

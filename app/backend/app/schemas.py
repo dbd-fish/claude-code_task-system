@@ -7,7 +7,7 @@
 
 from datetime import date, datetime
 from typing import Optional
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, field_validator
 
 
 class TaskBase(BaseModel):
@@ -22,7 +22,8 @@ class TaskBase(BaseModel):
     assignee: Optional[str] = Field(None, max_length=100, description="担当者")
     status: str = Field(default="pending", description="ステータス（pending, in_progress, completed）")
     
-    @validator('status')
+    @field_validator('status')
+    @classmethod
     def validate_status(cls, v):
         """ステータス値のバリデーション"""
         valid_statuses = ["pending", "in_progress", "completed"]
@@ -30,14 +31,16 @@ class TaskBase(BaseModel):
             raise ValueError(f'ステータスは {valid_statuses} のいずれかである必要があります')
         return v
     
-    @validator('deadline')
+    @field_validator('deadline')
+    @classmethod
     def validate_deadline(cls, v):
         """期限日のバリデーション"""
         if v is not None and v < date.today():
             raise ValueError('期限は今日以降の日付を設定してください')
         return v
     
-    @validator('title')
+    @field_validator('title')
+    @classmethod
     def validate_title(cls, v):
         """タスクタイトルのバリデーション"""
         if not v or not v.strip():
@@ -67,7 +70,8 @@ class TaskUpdate(BaseModel):
     assignee: Optional[str] = Field(None, max_length=100, description="担当者")
     status: Optional[str] = Field(None, description="ステータス（pending, in_progress, completed）")
     
-    @validator('status')
+    @field_validator('status')
+    @classmethod
     def validate_status(cls, v):
         """ステータス値のバリデーション"""
         if v is not None:
@@ -76,13 +80,15 @@ class TaskUpdate(BaseModel):
                 raise ValueError(f'ステータスは {valid_statuses} のいずれかである必要があります')
         return v
     
-    @validator('deadline')
+    @field_validator('deadline')
+    @classmethod
     def validate_deadline(cls, v):
         """期限日のバリデーション（更新時は過去日も許可）"""
         # 更新時は既存タスクの期限を過去に変更することも許可
         return v
     
-    @validator('title')
+    @field_validator('title')
+    @classmethod
     def validate_title(cls, v):
         """タスクタイトルのバリデーション"""
         if v is not None and (not v or not v.strip()):
@@ -96,7 +102,7 @@ class TaskUpdate(BaseModel):
         Returns:
             bool: 更新対象フィールドがある場合True
         """
-        update_data = self.dict(exclude_unset=True)
+        update_data = self.model_dump(exclude_unset=True)
         return len(update_data) > 0
 
 
@@ -110,8 +116,7 @@ class TaskResponse(TaskBase):
     created_at: datetime = Field(..., description="作成日時")
     updated_at: datetime = Field(..., description="更新日時")
     
-    class Config:
-        from_attributes = True
+    model_config = {"from_attributes": True}
 
 
 class TaskListResponse(BaseModel):

@@ -8,7 +8,10 @@ services:
     container_name: taskmanager-db
     environment:
       POSTGRES_DB: taskmanager
+      POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
+      # セキュリティ向上
+      POSTGRES_INITDB_ARGS: "--auth-host=scram-sha-256 --auth-local=scram-sha-256"
     ports:
       - "5432:5432"
     volumes:
@@ -21,6 +24,16 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
+      start_period: 40s
+    # リソース制限
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+        reservations:
+          memory: 256M
+          cpus: '0.25'
 
   # FastAPIバックエンド
   backend:
@@ -33,16 +46,29 @@ services:
     environment:
       DATABASE_URL: postgresql://postgres:postgres@database:5432/taskmanager
       PYTHONPATH: /app
+      # ログレベル設定
+      LOG_LEVEL: INFO
+      DEBUG: "true"
     depends_on:
       database:
         condition: service_healthy
     volumes:
       - ./app/backend:/app
+      - backend_cache:/root/.cache/pip
     networks:
       - taskmanager-network
     restart: unless-stopped
+    # リソース制限
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+        reservations:
+          memory: 256M
+          cpus: '0.25'
 
-  # React Router V7フロントエンド
+  # Vite + React + React Router DOM フロントエンド
   frontend:
     build:
       context: ./app/frontend
@@ -52,19 +78,39 @@ services:
       - "3000:3000"
     environment:
       REACT_APP_API_URL: http://localhost:8000
+      # Vite開発サーバー設定
+      VITE_API_URL: http://localhost:8000
+      NODE_ENV: development
     depends_on:
       - backend
     volumes:
       - ./app/frontend:/app
       - /app/node_modules
+      - frontend_cache:/app/.vite
     networks:
       - taskmanager-network
     restart: unless-stopped
+    # リソース制限
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '1.0'
+        reservations:
+          memory: 512M
+          cpus: '0.5'
 
 # ボリューム定義
 volumes:
   postgres_data:
     driver: local
+    name: taskmanager_postgres_data
+  backend_cache:
+    driver: local
+    name: taskmanager_backend_cache
+  frontend_cache:
+    driver: local
+    name: taskmanager_frontend_cache
 
 # ネットワーク定義
 networks:

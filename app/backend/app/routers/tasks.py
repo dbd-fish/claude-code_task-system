@@ -80,7 +80,7 @@ async def create_task(
         # レスポンスを作成
         return TaskCreateResponse(
             message="タスクが正常に作成されました",
-            task=TaskResponse.from_orm(new_task)
+            task=TaskResponse.model_validate(new_task)
         )
         
     except SQLAlchemyError as e:
@@ -132,7 +132,7 @@ async def get_task(
                 detail=f"ID {task_id} のタスクが見つかりません"
             )
         
-        return TaskResponse.from_orm(task)
+        return TaskResponse.model_validate(task)
         
     except HTTPException:
         # HTTPExceptionは再発生
@@ -247,7 +247,7 @@ async def get_tasks_endpoint(
         total_pages = math.ceil(total / size) if total > 0 else 1
         
         # レスポンス用のタスクデータに変換
-        task_responses = [TaskResponse.from_orm(task) for task in tasks]
+        task_responses = [TaskResponse.model_validate(task) for task in tasks]
         
         return TaskListResponse(
             tasks=task_responses,
@@ -309,7 +309,7 @@ async def update_task_endpoint(
                 detail=f"ID {task_id} のタスクが見つかりません"
             )
         
-        return TaskResponse.from_orm(updated_task)
+        return TaskResponse.model_validate(updated_task)
         
     except HTTPException:
         # HTTPExceptionは再発生
@@ -379,7 +379,7 @@ async def get_task_delete_confirmation(
             warning_message += " 期限が未来のタスクです。"
         
         return TaskDeleteConfirmationResponse(
-            task=TaskResponse.from_orm(task),
+            task=TaskResponse.model_validate(task),
             warning=warning_message
         )
         
@@ -429,7 +429,7 @@ async def delete_task_endpoint(
         
         return TaskDeleteResponse(
             message=f"タスク「{deleted_task.title}」が正常に削除されました",
-            deleted_task=TaskResponse.from_orm(deleted_task)
+            deleted_task=TaskResponse.model_validate(deleted_task)
         )
         
     except HTTPException:

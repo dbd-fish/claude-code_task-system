@@ -8,7 +8,7 @@ import pytest
 from datetime import date, timedelta
 from pydantic import ValidationError
 
-from app.schemas import TaskCreate, TaskUpdate, TaskBase
+from app.schemas import TaskCreate, TaskUpdate
 
 
 class TestTaskCreateValidation:

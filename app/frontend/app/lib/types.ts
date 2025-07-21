@@ -10,18 +10,18 @@ export interface Task {
   id: number;
   title: string;
   description: string;
-  dueDate: string;
+  deadline: string;  // API仕様に合わせてdueDateからdeadlineに変更
   assignee: string;
   status: TaskStatus;
-  createdAt?: string;
-  updatedAt?: string;
+  created_at?: string;  // API仕様に合わせてcreatedAtからcreated_atに変更
+  updated_at?: string;  // API仕様に合わせてupdatedAtからupdated_atに変更
 }
 
 // タスク作成時のフォームデータ
 export interface TaskFormData {
   title: string;
   description: string;
-  dueDate: string;
+  deadline: string;  // API仕様に合わせてdueDateからdeadlineに変更
   assignee: string;
   status?: TaskStatus;
 }
@@ -30,7 +30,7 @@ export interface TaskFormData {
 export interface CreateTaskData {
   title: string;
   description: string;
-  dueDate: string;
+  deadline: string;  // API仕様に合わせてdueDateからdeadlineに変更
   assignee: string;
 }
 
@@ -38,7 +38,7 @@ export interface CreateTaskData {
 export interface UpdateTaskData {
   title: string;
   description: string;
-  dueDate: string;
+  deadline: string;  // API仕様に合わせてdueDateからdeadlineに変更
   assignee: string;
   status: TaskStatus;
 }
