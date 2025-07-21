@@ -1,0 +1,60 @@
+{
+  "test_type": "Mock Backend Integration Test",
+  "summary": {
+    "total_tests": 8,
+    "passed": 8,
+    "failed": 0,
+    "success_rate": "100.0%"
+  },
+  "test_results": [
+    {
+      "test_name": "Mock API Health Check",
+      "status": "PASS",
+      "details": "Mock server is responding",
+      "timestamp": "2025-07-21T08:17:52.833474"
+    },
+    {
+      "test_name": "GET /tasks",
+      "status": "PASS",
+      "details": "Retrieved 2 tasks",
+      "timestamp": "2025-07-21T08:17:52.835563"
+    },
+    {
+      "test_name": "POST /tasks",
+      "status": "PASS",
+      "details": "Created task ID: 3",
+      "timestamp": "2025-07-21T08:17:52.837176"
+    },
+    {
+      "test_name": "GET /tasks/{id}",
+      "status": "PASS",
+      "details": "Retrieved task: 統合テスト用タスク",
+      "timestamp": "2025-07-21T08:17:52.838665"
+    },
+    {
+      "test_name": "PUT /tasks/{id}",
+      "status": "PASS",
+      "details": "Task updated successfully",
+      "timestamp": "2025-07-21T08:17:52.839941"
+    },
+    {
+      "test_name": "DELETE /tasks/{id}",
+      "status": "PASS",
+      "details": "Task deleted successfully",
+      "timestamp": "2025-07-21T08:17:52.841101"
+    },
+    {
+      "test_name": "404 Error Handling",
+      "status": "PASS",
+      "details": "Correctly returns 404 for non-existent task",
+      "timestamp": "2025-07-21T08:17:52.842057"
+    },
+    {
+      "test_name": "Validation Error",
+      "status": "PASS",
+      "details": "Correctly rejects invalid data",
+      "timestamp": "2025-07-21T08:17:52.842930"
+    }
+  ],
+  "timestamp": "2025-07-21T08:17:52.842959"
+}

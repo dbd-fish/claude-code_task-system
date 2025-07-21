@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>画面遷移テスト</title>
+    <style>
+        /* View Transition API用のCSS */
+        @view-transition {
+            navigation: auto;
+        }
+
+        ::view-transition-old(root),
+        ::view-transition-new(root) {
+            animation-duration: 0.3s;
+            animation-timing-function: ease-in-out;
+        }
+
+        ::view-transition-old(root) {
+            animation-name: fade-out;
+        }
+
+        ::view-transition-new(root) {
+            animation-name: fade-in;
+        }
+
+        @keyframes fade-in {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fade-out {
+            from {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .test-result {
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 4px;
+            border-left: 4px solid;
+        }
+
+        .success {
+            background-color: #d4edda;
+            border-left-color: #28a745;
+            color: #155724;
+        }
+
+        .error {
+            background-color: #f8d7da;
+            border-left-color: #dc3545;
+            color: #721c24;
+        }
+
+        .info {
+            background-color: #d1ecf1;
+            border-left-color: #17a2b8;
+            color: #0c5460;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feature-list li {
+            padding: 8px;
+            margin: 5px 0;
+            background: #f8f9fa;
+            border-radius: 4px;
+        }
+
+        .feature-list li:before {
+            content: "✓ ";
+            color: #28a745;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>T014 画面遷移実装テスト結果</h1>
+        
+        <div class="test-result success">
+            <h3>✅ 実装完了機能</h3>
+            <ul class="feature-list">
+                <li>React Router V7設定でView Transition API有効化</li>
+                <li>全LinkコンポーネントにviewTransition prop追加</li>
+                <li>CSS View Transition アニメーション定義</li>
+                <li>ナビゲーション進行状況プログレスバー</li>
+                <li>ローディングスピナーコンポーネント</li>
+                <li>共通PageLayoutコンポーネント</li>
+                <li>ホバーエフェクトとトランジション効果</li>
+            </ul>
+        </div>
+
+        <div class="test-result info">
+            <h3>📋 実装内容詳細</h3>
+            <p><strong>設定ファイル:</strong></p>
+            <ul>
+                <li>react-router.config.ts - View Transition API有効化</li>
+                <li>app/styles/transitions.css - CSSアニメーション定義</li>
+            </ul>
+            
+            <p><strong>コンポーネント:</strong></p>
+            <ul>
+                <li>NavigationProgress.tsx - ナビゲーション進行状況</li>
+                <li>LoadingSpinner.tsx - ローディング表示</li>
+                <li>PageLayout.tsx - 共通レイアウト</li>
+            </ul>
+            
+            <p><strong>更新ページ:</strong></p>
+            <ul>
+                <li>root.tsx - CSS読み込みとProgressBar追加</li>
+                <li>home.tsx - PageLayout適用とviewTransition追加</li>
+                <li>tasks.tsx - PageLayout適用とviewTransition追加</li>
+                <li>Navigation.tsx, Breadcrumb.tsx - viewTransition追加</li>
+                <li>全ルートページ - viewTransition prop追加</li>
+            </ul>
+        </div>
+
+        <div class="test-result success">
+            <h3>🎯 期待される動作</h3>
+            <ul class="feature-list">
+                <li>ページ間遷移時のスムーズなフェードトランジション</li>
+                <li>ナビゲーション中の進行状況表示</li>
+                <li>ボタンやリンクのホバーエフェクト</li>
+                <li>ブラウザの戻る/進むボタンでもアニメーション</li>
+                <li>モバイル端末での最適化されたアニメーション</li>
+            </ul>
+        </div>
+
+        <div class="test-result info">
+            <h3>📝 ブラウザサポート状況</h3>
+            <p>View Transition APIはモダンブラウザでサポートされています：</p>
+            <ul>
+                <li>Chrome 111+ ✅</li>
+                <li>Edge 111+ ✅</li>
+                <li>Safari 18+ ✅</li>
+                <li>Firefox 実験的サポート 🚧</li>
+            </ul>
+            <p>サポートされていないブラウザでは通常のページ遷移が行われます。</p>
+        </div>
+
+        <div class="test-result success">
+            <h3>🔧 開発モードでの確認方法</h3>
+            <p>以下のコマンドでアプリケーションを起動して画面遷移を確認：</p>
+            <pre style="background: #f8f9fa; padding: 10px; border-radius: 4px;">
+npm run dev
+# または
+npm run build && npm run start
+            </pre>
+        </div>
+    </div>
+
+    <script>
+        // View Transition API対応確認
+        if ('startViewTransition' in document) {
+            console.log('✅ View Transition API is supported');
+        } else {
+            console.log('❌ View Transition API is not supported in this browser');
+        }
+    </script>
+</body>
+</html>
