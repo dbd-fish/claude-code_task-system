@@ -1,79 +1,118 @@
+# タスク管理アプリ用 Docker Compose設定
 version: '3.8'
 
 services:
-  # Database service
-  db:
+  # PostgreSQLデータベース
+  database:
     image: postgres:15-alpine
-    container_name: task-manager-db-dev
+    container_name: taskmanager-db
     environment:
-      - POSTGRES_DB=taskmanager
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=password
-    volumes:
-      - postgres_data_dev:/var/lib/postgresql/data
-      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+      POSTGRES_DB: taskmanager
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      # セキュリティ向上
+      POSTGRES_INITDB_ARGS: "--auth-host=scram-sha-256 --auth-local=scram-sha-256"
     ports:
       - "5432:5432"
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-
-  # Backend service (development)
-  backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile.dev
-    container_name: task-manager-backend-dev
-    ports:
-      - "5000:5000"
-    environment:
-      - NODE_ENV=development
-      - PORT=5000
-      - DATABASE_URL=postgresql://postgres:password@db:5432/taskmanager
-      - TEST_DATABASE_URL=postgresql://postgres:password@db:5432/taskmanager
-      - JWT_SECRET=your-super-secret-jwt-key-dev
-      - CORS_ORIGIN=http://localhost:3000
-    depends_on:
-      - db
     volumes:
-      - ./backend:/app
-      - /app/node_modules
-    restart: unless-stopped
+      - postgres_data:/var/lib/postgresql/data
+      - ./app/database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - taskmanager-network
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5000"]
+      test: ["CMD-SHELL", "pg_isready -U postgres -d taskmanager"]
       interval: 30s
       timeout: 10s
       retries: 3
+      start_period: 40s
+    # リソース制限
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+        reservations:
+          memory: 256M
+          cpus: '0.25'
 
-  # Frontend service (development)
+  # FastAPIバックエンド
+  backend:
+    build:
+      context: ./app/backend
+      dockerfile: Dockerfile
+    container_name: taskmanager-backend
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@database:5432/taskmanager
+      PYTHONPATH: /app
+      # ログレベル設定
+      LOG_LEVEL: INFO
+      DEBUG: "true"
+    depends_on:
+      database:
+        condition: service_healthy
+    volumes:
+      - ./app/backend:/app
+      - backend_cache:/root/.cache/pip
+    networks:
+      - taskmanager-network
+    restart: unless-stopped
+    # リソース制限
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+        reservations:
+          memory: 256M
+          cpus: '0.25'
+
+  # Vite + React + React Router DOM フロントエンド
   frontend:
     build:
-      context: ./frontend
-      dockerfile: Dockerfile.dev
-    container_name: task-manager-frontend-dev
+      context: ./app/frontend
+      dockerfile: Dockerfile
+    container_name: taskmanager-frontend
     ports:
       - "3000:3000"
     environment:
-      - NODE_ENV=development
-      - REACT_APP_API_BASE_URL=http://localhost:5000/api
-      - REACT_APP_ENVIRONMENT=development
-      - CHOKIDAR_USEPOLLING=true
+      REACT_APP_API_URL: http://localhost:8000
+      # Vite開発サーバー設定
+      VITE_API_URL: http://localhost:8000
+      NODE_ENV: development
     depends_on:
       - backend
     volumes:
-      - ./frontend:/app
+      - ./app/frontend:/app
       - /app/node_modules
-    stdin_open: true
-    tty: true
+      - frontend_cache:/app/.vite
+    networks:
+      - taskmanager-network
     restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+    # リソース制限
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '1.0'
+        reservations:
+          memory: 512M
+          cpus: '0.5'
 
+# ボリューム定義
 volumes:
-  postgres_data_dev:
+  postgres_data:
+    driver: local
+    name: taskmanager_postgres_data
+  backend_cache:
+    driver: local
+    name: taskmanager_backend_cache
+  frontend_cache:
+    driver: local
+    name: taskmanager_frontend_cache
+
+# ネットワーク定義
+networks:
+  taskmanager-network:
+    driver: bridge

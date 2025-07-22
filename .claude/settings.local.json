@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "Bash(*)"
+      "Bash(*)",
+      "Bash(rm:*)",
+      "Bash(docker-compose build:*)"
     ],
     "deny": [
       "Bash(git commit:*)",
@@ -21,4 +23,3 @@
     ]
   }
 }
-

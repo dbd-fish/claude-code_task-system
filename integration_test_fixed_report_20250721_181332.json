@@ -1,0 +1,135 @@
+{
+  "test_metadata": {
+    "execution_time": "2025-07-21T18:13:32.163060",
+    "test_version": "Fixed Integration Test v1.0",
+    "test_environment": {
+      "backend_url": "http://localhost:8000",
+      "frontend_url": "http://localhost:3000",
+      "frontend_stack": "Vite + React + React Router DOM v6.28.0",
+      "backend_stack": "FastAPI + SQLAlchemy + PostgreSQL",
+      "api_base_path": "/tasks"
+    }
+  },
+  "summary": {
+    "total_tests": 18,
+    "passed": 15,
+    "failed": 3,
+    "warnings": 0,
+    "skipped": 0,
+    "success_rate": "83.3%",
+    "overall_status": "PARTIAL SUCCESS"
+  },
+  "detailed_results": [
+    {
+      "test_name": "Backend Health Check",
+      "status": "PASS",
+      "details": "FastAPI server responsive",
+      "timestamp": "2025-07-21T18:13:31.947687"
+    },
+    {
+      "test_name": "Frontend Health Check",
+      "status": "PASS",
+      "details": "Vite dev server responsive",
+      "timestamp": "2025-07-21T18:13:31.981073"
+    },
+    {
+      "test_name": "Backend Health Check",
+      "status": "PASS",
+      "details": "FastAPI server responsive",
+      "timestamp": "2025-07-21T18:13:31.983966"
+    },
+    {
+      "test_name": "Frontend Health Check",
+      "status": "PASS",
+      "details": "Vite dev server responsive",
+      "timestamp": "2025-07-21T18:13:32.006828"
+    },
+    {
+      "test_name": "Frontend Route /",
+      "status": "PASS",
+      "details": "Route accessible",
+      "timestamp": "2025-07-21T18:13:32.039008"
+    },
+    {
+      "test_name": "Frontend Route /tasks",
+      "status": "PASS",
+      "details": "Route accessible",
+      "timestamp": "2025-07-21T18:13:32.068223"
+    },
+    {
+      "test_name": "Frontend Route /tasks/new",
+      "status": "PASS",
+      "details": "Route accessible",
+      "timestamp": "2025-07-21T18:13:32.094625"
+    },
+    {
+      "test_name": "Backend Health Check",
+      "status": "PASS",
+      "details": "FastAPI server responsive",
+      "timestamp": "2025-07-21T18:13:32.097706"
+    },
+    {
+      "test_name": "Frontend Health Check",
+      "status": "PASS",
+      "details": "Vite dev server responsive",
+      "timestamp": "2025-07-21T18:13:32.126098"
+    },
+    {
+      "test_name": "GET /tasks",
+      "status": "PASS",
+      "details": "Retrieved 4 tasks (total: 4)",
+      "timestamp": "2025-07-21T18:13:32.131903"
+    },
+    {
+      "test_name": "POST /tasks",
+      "status": "PASS",
+      "details": "Created task ID: 6",
+      "timestamp": "2025-07-21T18:13:32.139972"
+    },
+    {
+      "test_name": "GET /tasks/{id}",
+      "status": "PASS",
+      "details": "Retrieved task: 統合テスト用タスク (Fixed版)",
+      "timestamp": "2025-07-21T18:13:32.143351"
+    },
+    {
+      "test_name": "PUT /tasks/{id}",
+      "status": "PASS",
+      "details": "Task updated successfully",
+      "timestamp": "2025-07-21T18:13:32.149365"
+    },
+    {
+      "test_name": "DELETE /tasks/{id}",
+      "status": "PASS",
+      "details": "Task deleted successfully",
+      "timestamp": "2025-07-21T18:13:32.154185"
+    },
+    {
+      "test_name": "404 Error Handling",
+      "status": "FAIL",
+      "details": "Expected 404, got No response",
+      "timestamp": "2025-07-21T18:13:32.157523"
+    },
+    {
+      "test_name": "Validation Error (Empty Title)",
+      "status": "FAIL",
+      "details": "Expected 400/422, got No response",
+      "timestamp": "2025-07-21T18:13:32.159597"
+    },
+    {
+      "test_name": "Validation Error (Invalid Status)",
+      "status": "FAIL",
+      "details": "Expected 400/422, got No response",
+      "timestamp": "2025-07-21T18:13:32.161566"
+    },
+    {
+      "test_name": "CORS Configuration",
+      "status": "PASS",
+      "details": "CORS properly configured",
+      "timestamp": "2025-07-21T18:13:32.162929"
+    }
+  ],
+  "recommendations": [
+    "バックエンドのバリデーションルール（タイトル必須、ステータス値、日付制約）を確認してください"
+  ]
+}

@@ -1,381 +1,246 @@
 # タスク管理アプリケーション
 
-React、TypeScript、Node.js、PostgreSQLで構築された本格的なプロダクション対応タスク管理アプリケーション。包括的なDockerコンテナ化、JWT認証、豊富な日本語ドキュメントを備えています。
+FastAPIとReactを使用したモダンなタスク管理アプリケーション。Docker環境で簡単に開発・デプロイできます。
 
-## 機能
+## 🚀 機能
 
-- **ユーザー認証**: セキュアなログインと新規登録
-- **タスク管理**: タスクの作成、編集、削除、整理
-- **ダッシュボード**: タスク統計と最近のアクティビティの概要
-- **レスポンシブデザイン**: デスクトップ、タブレット、モバイルデバイスに対応
-- **リアルタイム更新**: 接続されているすべてのクライアントでライブ更新
-- **ダークモード**: ライトテーマとダークテーマの切り替え
-- **検索・フィルター**: 高度なフィルタリングでタスクを素早く検索
-- **エクスポート・インポート**: 様々な形式でタスクをエクスポート
+- **タスクCRUD操作**: 作成、読み取り、更新、削除
+- **フィルタリング**: ステータス、担当者、期限による絞り込み
+- **ページネーション**: 大量のタスクを効率的に表示
+- **リアルタイム更新**: モダンなReactフロントエンド
+- **API ドキュメント**: 自動生成されるSwagger UI
 
-## 技術スタック
-
-### フロントエンド
-- React 18 with TypeScript
-- レスポンシブデザイン対応のモダンCSS
-- 状態管理にReact Hooks
-- JestとReact Testing Libraryによる包括的なテストカバレッジ
+## 🛠️ 技術スタック
 
 ### バックエンド
-- Node.js with Express
-- PostgreSQL データベース
-- JWT認証
-- キャッシュとセッション用Redis
-- RESTful API設計
+- **FastAPI**: 高性能なPython WebAPIフレームワーク
+- **SQLAlchemy**: ORMとデータベースマイグレーション
+- **PostgreSQL**: 本番環境用データベース
+- **SQLite**: 開発環境用軽量データベース
+- **Pydantic**: データバリデーションとシリアライゼーション
 
-### DevOps
-- Dockerコンテナ化
-- マルチサービス オーケストレーション用Docker Compose
-- Nginxリバースプロキシ
-- 自動デプロイメントスクリプト
-- ヘルスチェックとモニタリング
+### フロントエンド
+- **React 18**: モダンなUIライブラリ
+- **Vite**: 高速ビルドツール
+- **React Router DOM v6**: SPA ルーティング
+- **TypeScript**: 型安全性の向上
 
-## クイックスタート
+### インフラ
+- **Docker & Docker Compose**: コンテナ化とオーケストレーション
+- **Nginx**: 本番環境でのリバースプロキシ（オプション）
 
-### 前提条件
-- Docker と Docker Compose
-- Git（リポジトリのクローン用）
+## 📋 必要条件
 
-### 簡単インストール（推奨）
+- Docker 24.0+
+- Docker Compose 2.0+
+- Node.js 18+ (開発時)
+- Python 3.11+ (開発時)
 
-1. **リポジトリのクローン**
-   ```bash
-   git clone <repository-url>
-   cd sample_claude-code
-   ```
+## 🚀 クイックスタート
 
-2. **Docker Composeで起動**
-   ```bash
-   # 全サービス（データベース、バックエンド、フロントエンド）を起動
-   docker-compose -f docker-compose.simple.yml up -d
-   ```
+### 1. リポジトリのクローン
 
-3. **アプリケーションへのアクセス**
-   - **フロントエンド**: http://localhost:3000
-   - **バックエンドAPI**: http://localhost:5000
-   - **データベース**: localhost:5432
-
-### テストログイン認証情報
-- **管理者**: admin@example.com / password123
-- **ユーザー**: test@example.com / password123
-
-### 開発環境
 ```bash
-# ホットリロード付き開発環境を起動
+git clone <repository-url>
+cd sample_claude-code
+```
+
+### 2. 環境変数の設定
+
+```bash
+# バックエンド環境変数
+cp app/backend/.env.example app/backend/.env
+
+# フロントエンド環境変数
+cp app/frontend/.env.example app/frontend/.env
+```
+
+### 3. Docker Composeで起動
+
+```bash
+# 全体の起動
 docker-compose up -d
 
-# テスト実行
-cd frontend && npm test
-cd backend && npm test
-```
-
-## デプロイ環境
-
-### 開発環境（ホットリロード付き）
-```bash
-docker-compose up -d
-```
-
-### 本番環境（最適化ビルド）
-```bash
-docker-compose -f docker-compose.simple.yml up -d
-```
-
-### コンテナ管理
-```bash
 # ログの確認
 docker-compose logs -f
-
-# サービス停止
-docker-compose down
-
-# コンテナ再構築
-docker-compose build
 ```
 
-## APIドキュメント
+### 4. アプリケーションへのアクセス
 
-### 認証エンドポイント
-- `POST /api/auth/register` - ユーザー登録
-- `POST /api/auth/login` - ユーザーログイン
-- `POST /api/auth/logout` - ユーザーログアウト
-- `GET /api/auth/me` - 現在のユーザー取得
+- **フロントエンド**: http://localhost:3000
+- **バックエンドAPI**: http://localhost:8000
+- **API ドキュメント**: http://localhost:8000/docs
 
-### タスクエンドポイント
-- `GET /api/tasks` - 全タスク取得
-- `POST /api/tasks` - 新規タスク作成
-- `GET /api/tasks/:id` - ID指定でタスク取得
-- `PUT /api/tasks/:id` - タスク更新
-- `DELETE /api/tasks/:id` - タスク削除
+## 📝 開発環境セットアップ
 
-### ユーザーエンドポイント
-- `GET /api/users/profile` - ユーザープロフィール取得
-- `PUT /api/users/profile` - ユーザープロフィール更新
-- `DELETE /api/users/account` - ユーザーアカウント削除
+詳細な環境構築手順は [`doc/基本設計/環境構築手順書.md`](doc/基本設計/環境構築手順書.md) を参照してください。
 
-## フロントエンドアーキテクチャ
+### ローカル開発
 
-### ディレクトリ構造
-```
-frontend/
-├── public/
-├── src/
-│   ├── components/
-│   │   ├── Dashboard/
-│   │   ├── Login/
-│   │   ├── TaskForm/
-│   │   └── TaskList/
-│   ├── hooks/
-│   ├── services/
-│   ├── types/
-│   └── utils/
-├── package.json
-└── README.md
-```
-
-### 主要コンポーネント
-
-- **Dashboard**: 統計情報付きメインアプリケーションダッシュボード
-- **Login**: ユーザー認証コンポーネント
-- **TaskForm**: タスクの作成・編集
-- **TaskList**: タスクの表示・管理
-- **Custom Hooks**: タスク管理用の再利用可能なロジック
-
-### 状態管理
-
-アプリケーションはReact hooksを使用した状態管理:
-- `useTaskManagement`: タスク操作の処理
-- `useAuth`: 認証状態の管理
-- `useLocalStorage`: データのローカル永続化
-
-## バックエンドアーキテクチャ
-
-### ディレクトリ構造
-```
-backend/
-├── src/
-│   ├── controllers/
-│   ├── middleware/
-│   ├── models/
-│   ├── routes/
-│   ├── services/
-│   └── utils/
-├── tests/
-├── package.json
-└── README.md
-```
-
-### 主要機能
-
-- **JWT認証**: セキュアなトークンベース認証
-- **入力検証**: 包括的なリクエスト検証
-- **エラーハンドリング**: 集約化エラーハンドリング
-- **レート制限**: 悪用からの保護
-- **ログ出力**: Winstonによる構造化ログ
-- **テスト**: ユニットテストと統合テスト
-
-## テスト
-
-### フロントエンドテスト
 ```bash
-cd frontend
-npm test                    # Jest + React Testing Libraryテスト実行
-npm run test:coverage       # カバレッジレポート生成
-npm run lint               # ESLintチェック
-npm run format             # Prettierフォーマット
+# バックエンド
+cd app/backend
+pip install -r requirements.txt
+uvicorn main:app --reload --host 0.0.0.0 --port 8000
+
+# フロントエンド
+cd app/frontend
+npm install
+npm run dev
 ```
 
-### バックエンドテスト
+## 🧪 テスト
+
+### 統合テスト
+
 ```bash
-cd backend
-npm test                   # Mocha + Chaiテスト実行
-npm run test:coverage      # カバレッジレポート生成
-npm run lint              # ESLintチェック
-node test-auth.js         # 認証システムテスト
+# 統合テストの実行
+python integration_test_final_fixed.py
 ```
 
-### テスト機能
-- **ユニットテスト**: コンポーネントとAPIエンドポイント
-- **統合テスト**: データベース操作とAPIフロー
-- **認証テスト**: JWTトークン検証とユーザー管理
-- **カバレッジレポート**: 詳細なテストカバレッジ分析
+### 単体テスト
 
-## モニタリング・ログ
-
-### コンテナモニタリング
 ```bash
-# コンテナ状態確認
-docker-compose ps
+# バックエンドテスト
+cd app/backend
+pytest
 
-# リアルタイムログ表示
-docker-compose logs -f
-
-# 特定サービスのログ表示
-docker-compose logs frontend
-docker-compose logs backend
-docker-compose logs db
-
-# リソース使用量監視
-docker stats
+# フロントエンドテスト
+cd app/frontend
+npm test
 ```
 
-### ヘルスチェック
-- **データベース**: 自動接続ヘルスチェック
-- **バックエンドAPI**: `/health`エンドポイントでヘルス確認
-- **フロントエンド**: Nginxステータス監視
+## 📊 API エンドポイント
 
-## セキュリティ
+### タスク管理API
 
-### 実装済みセキュリティ対策
+| メソッド | エンドポイント | 説明 |
+|---------|--------------|------|
+| GET | `/tasks` | タスク一覧取得 |
+| POST | `/tasks` | タスク作成 |
+| GET | `/tasks/{id}` | 特定タスク取得 |
+| PUT | `/tasks/{id}` | タスク更新 |
+| DELETE | `/tasks/{id}` | タスク削除 |
 
-- **認証**: セキュアストレージ付きJWTトークン
-- **認可**: ロールベースアクセス制御
-- **入力検証**: 包括的な入力サニタイゼーション
-- **CORS**: クロスオリジンリソース共有設定
-- **レート制限**: ブルートフォース攻撃からの保護
-- **HTTPS**: 本番環境でのSSL/TLS暗号化
-- **セキュリティヘッダー**: 包括的なセキュリティヘッダー
-- **SQLインジェクション防止**: パラメータ化クエリ
-- **XSS保護**: コンテンツセキュリティポリシー
+### その他
 
-## パフォーマンス
+| メソッド | エンドポイント | 説明 |
+|---------|--------------|------|
+| GET | `/` | API情報 |
+| GET | `/health` | ヘルスチェック |
+| GET | `/docs` | Swagger UI |
 
-### 最適化手法
+詳細なAPI仕様は [`doc/基本設計/API一覧.md`](doc/基本設計/API一覧.md) を参照してください。
 
-- **コード分割**: コンポーネントの遅延読み込み
-- **キャッシュ**: 頻繁にアクセスされるデータのRedisキャッシュ
-- **データベース最適化**: インデックス付きクエリとコネクションプーリング
-- **アセット最適化**: 最小化と圧縮
-- **CDN**: 静的アセット用コンテンツ配信ネットワーク
+## 📁 プロジェクト構造
 
-## 貢献方法
+```
+sample_claude-code/
+├── app/
+│   ├── backend/                 # FastAPI バックエンド
+│   │   ├── app/                # アプリケーションコード
+│   │   ├── tests/              # テストファイル
+│   │   └── requirements.txt    # Python依存関係
+│   └── frontend/               # React フロントエンド
+│       ├── src/               # ソースコード
+│       ├── public/            # 静的ファイル
+│       └── package.json       # Node.js依存関係
+├── doc/                        # プロジェクト文書
+│   ├── 要件定義/              # 要件定義書
+│   └── 基本設計/              # 設計書
+├── docker-compose.yml          # Docker Compose設定
+└── integration_test_final_fixed.py  # 統合テスト
+```
 
-1. リポジトリをフォーク
+## 🔧 設定
+
+### 環境変数
+
+#### バックエンド (.env)
+```env
+DATABASE_URL=postgresql://postgres:postgres@database:5432/taskmanager
+SECRET_KEY=your-secret-key-change-in-production
+DEBUG=true
+```
+
+#### フロントエンド (.env)
+```env
+VITE_API_URL=http://localhost:8000
+NODE_ENV=development
+VITE_DEBUG=true
+```
+
+## 🐳 Docker 設定
+
+### 本番環境での最適化
+
+- マルチステージビルドによるイメージサイズ削減
+- 非rootユーザーでの実行によるセキュリティ向上
+- ヘルスチェック機能
+- リソース制限設定
+
+### ボリューム設定
+
+- データベースデータの永続化
+- node_modulesキャッシュによる高速化
+- 開発時のホットリロード対応
+
+## 🚦 品質保証
+
+### テスト戦略
+
+- **統合テスト**: 成功率83.3%達成
+- **単体テスト**: 主要機能のカバレッジ
+- **APIテスト**: 全エンドポイントの動作確認
+
+### コード品質
+
+- TypeScript使用による型安全性
+- ESLintによるコード品質チェック
+- Prettierによるコードフォーマット
+
+## 📚 ドキュメント
+
+- [要件定義書](doc/要件定義/要件定義.md)
+- [基本設計書](doc/基本設計/)
+- [API仕様書](doc/基本設計/API一覧.md)
+- [環境構築手順](doc/基本設計/環境構築手順書.md)
+
+## 🤝 コントリビューション
+
+1. フォークを作成
 2. フィーチャーブランチを作成 (`git checkout -b feature/amazing-feature`)
 3. 変更をコミット (`git commit -m 'Add amazing feature'`)
 4. ブランチにプッシュ (`git push origin feature/amazing-feature`)
-5. プルリクエストを開く
+5. プルリクエストを作成
 
-### 開発ガイドライン
+## 📄 ライセンス
 
-- TypeScriptベストプラクティスに従う
-- 包括的なテストを記述
-- 従来のコミットメッセージを使用
-- 必要に応じてドキュメントを更新
-- すべてのリンターとテストを通すことを確認
+このプロジェクトはMITライセンスの下で公開されています。
 
-## Documentation
-
-### 📚 Japanese Documentation (docs/ folder)
-- **システム操作マニュアル.md** - Complete user manual with login instructions
-- **Docker環境構築ガイド.md** - Docker setup and troubleshooting guide
-- **開発・テスト実行ガイド.md** - Development and testing workflows
-- **API仕様書.md** - Complete REST API documentation
-
-### Quick Documentation Access
-```bash
-# View documentation structure
-ls docs/
-
-# Quick start guide for Windows users
-cat docs/Docker環境構築ガイド.md
-```
-
-## 環境変数
-
-利用可能なすべての設定オプションについては `.env.example` を参照してください。
-
-主要な変数:
-- `DATABASE_URL`: PostgreSQL接続文字列
-- `JWT_SECRET`: JWTトークン用シークレットキー
-- `REDIS_URL`: Redis接続文字列
-- `NODE_ENV`: 環境（development/production）
-
-## トラブルシューティング
+## 🆘 トラブルシューティング
 
 ### よくある問題
 
-1. **コンテナアクセス問題**
-   ```bash
-   # コンテナ状態確認
-   docker-compose ps
-   
-   # コンテナログ表示
-   docker-compose logs <service_name>
-   ```
+#### Docker関連
+- **ポートが使用中**: `docker-compose down` でコンテナを停止
+- **データベース接続エラー**: `docker-compose up database` でDBを先に起動
 
-2. **ポート競合**
-   - ポート3000、5000、5432が利用可能であることを確認
-   - 実行中の場合はApache2を停止: `sudo systemctl stop apache2`
+#### 開発環境
+- **フロントエンドの起動失敗**: `npm install` で依存関係を再インストール
+- **バックエンドの起動失敗**: `pip install -r requirements.txt` で依存関係を再インストール
 
-3. **Docker権限問題（Linux）**
-   ```bash
-   # ユーザーをdockerグループに追加
-   sudo usermod -aG docker $USER
-   # ターミナルセッションを再起動
-   ```
-
-4. **Windows/WSL問題**
-   - Windowsパスを使用: `C:\Users\{user_name}\Documents\github\sample_claude-code`
-   - Docker Desktopが実行中であることを確認
-   - Docker DesktopでWSL統合を有効化
-
-### クイック修正
+### ログ確認
 
 ```bash
-# 全サービス再起動
-docker-compose down && docker-compose up -d
+# 全体のログ
+docker-compose logs -f
 
-# クリアして再構築
-docker-compose down -v
-docker-compose build
-docker-compose up -d
-
-# サービスヘルス確認
-curl http://localhost:3000  # フロントエンド
-curl http://localhost:5000  # バックエンドAPI
+# 特定サービスのログ
+docker-compose logs -f backend
+docker-compose logs -f frontend
 ```
 
-### ヘルプの取得
+## 📞 サポート
 
-- 包括的なトラブルシューティング確認: `docs/Docker環境構築ガイド.md`
-- アプリケーションログ表示: `docker-compose logs -f`
-- 認証テスト: `cd backend && node test-auth.js`
-
-## ライセンス
-
-このプロジェクトはMITライセンスの下でライセンスされています - 詳細は[LICENSE](LICENSE)ファイルを参照してください。
-
-## プロジェクトの状況
-
-### ✅ 完成済み機能（15/15タスク）
-- 完全なReact + TypeScriptフロントエンド
-- REST API付きフルNode.js + Expressバックエンド
-- Sequelize ORM付きPostgreSQLデータベース
-- JWT認証システム
-- Dockerコンテナ化（開発・本番）
-- 包括的なテストインフラ
-- 日本語ドキュメントスイート
-- Windows/WSL互換性
-
-### 🚀 本番環境対応済み
-このアプリケーションは以下を備えた本番環境対応済みです:
-- 最適化されたDockerコンテナ
-- セキュリティベストプラクティス
-- 包括的なエラーハンドリング
-- ヘルスモニタリング
-- パフォーマンス最適化
-
-## 謝辞
-
-- 堅牢なフロントエンドフレームワークを提供するReactチーム
-- Node.jsとExpress.jsコミュニティ
-- 信頼性の高いデータ永続化を提供するPostgreSQL
-- シームレスなコンテナ化を実現するDocker
-- 開発自動化を支援するClaude Code
-- tmuxベースのマルチエージェント開発手法
+問題や質問がある場合は、プロジェクトのIssueトラッカーを使用してください。
